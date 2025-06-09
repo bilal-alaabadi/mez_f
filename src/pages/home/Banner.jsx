@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import timings from "../../assets/A high-contrast, low-key photograph of sculpted, layered papier-mâché incense, perfumes, lotions, and oils, showing refined features, deep shadows, and a graceful, elegant aesthetic.jpg";
+import timings from "../../assets/man.jpg";
 
 const Banner = () => {
     return (
