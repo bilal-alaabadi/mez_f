@@ -18,7 +18,7 @@ const createWhatsAppMessage = () => {
         message += `${product.name}\n`;
         message += `الكمية: ${product.quantity}\n`;
         message += `السعر: ر.ع ${product.price.toFixed(2)}\n`;
-        message += `الرابط: https://pinkheart369.shop/shop/${product._id}\n`; // تم تحديث الرابط هنا
+        message += `الرابط: https://www.pinkheart369.shop/shop/${product._id}\n`; // تم تحديث الرابط هنا
         message += `----------------\n`;
     });
     
