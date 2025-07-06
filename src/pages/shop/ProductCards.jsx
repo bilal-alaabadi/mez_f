@@ -30,28 +30,12 @@ const ProductCards = ({ products }) => {
                             </div>
                         </Link>
 
-                        <div className='hover:block absolute top-3 right-3'>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAddToCart(product);
-                                }}
-                                className="bg-primary p-1.5 text-white hover:bg-primary-dark rounded-full"
-                            >
-                                <i className="ri-shopping-cart-2-line"></i>
-                            </button>
-                        </div>
                     </div>
 
                     {/* product description */}
                     <div className='product__card__content text-center mt-4'>
                         <h4 className="text-lg font-semibold">{product.name}</h4>
-                        <p className="text-primary mt-2">
-                            {product.price} ر.ع
-                            {product?.oldPrice && (
-                                <s className="text-gray-500 ml-2">ر.ع{product?.oldPrice}</s>
-                            )}
-                        </p>
+                       
                         {/* <RatingStars rating={product.rating} /> */}
                     </div>
                 </div>

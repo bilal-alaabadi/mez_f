@@ -50,10 +50,6 @@ const CartModal = ({ products, isOpen, onClose }) => {
                         alt={item.name} 
                         className='size-12 object-cover mr-4' 
                     />
-                    <div>
-                        <h5 className='text-lg font-medium'>{item.name}</h5>
-                        <p className='text-gray-600 text-sm'> ر.ع{Number(item.price).toFixed(2)}</p>
-                    </div>
 
                     <div className='flex flex-row md:justify-start justify-end items-center mt-2'>
                         <button

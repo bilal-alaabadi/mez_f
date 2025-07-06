@@ -1,141 +1,157 @@
 import React, { useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom'; // أضف useNavigate
-import RatingStars from '../../../components/RatingStars';
-import { useDispatch, useSelector } from 'react-redux'; // أضف useSelector
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFetchProductByIdQuery } from '../../../redux/features/products/productsApi';
 import { addToCart } from '../../../redux/features/cart/cartSlice';
-import ReviewsCard from '../reviews/ReviewsCard';
 
 const SingleProduct = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate(); // استخدم useNavigate للتوجيه
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth);
     const { data, error, isLoading } = useFetchProductByIdQuery(id);
 
-    // تحقق من حالة المستخدم
-    const { user } = useSelector((state) => state.auth);
-
-    const singleProduct = data?.product || {};
-    const productReviews = data?.reviews || [];
-
-    // حالة لتتبع الصورة الحالية
+    const dress = data?.product || {};
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const handleAddToCart = (product) => {
-        // إذا لم يكن المستخدم مسجلًا، قم بتوجيهه إلى صفحة التسجيل
+    const handleAddToCart = () => {
         if (!user) {
-            navigate('/login'); // توجيه إلى صفحة التسجيل
+            navigate('/login');
             return;
         }
-        dispatch(addToCart(product));
+        dispatch(addToCart(dress));
     };
 
-    // التبديل إلى الصورة التالية
     const nextImage = () => {
-        setCurrentImageIndex((prevIndex) =>
-            prevIndex === singleProduct.image.length - 1 ? 0 : prevIndex + 1
+        setCurrentImageIndex((prev) =>
+            prev === dress.image?.length - 1 ? 0 : prev + 1
         );
     };
 
-    // التبديل إلى الصورة السابقة
     const prevImage = () => {
-        setCurrentImageIndex((prevIndex) =>
-            prevIndex === 0 ? singleProduct.image.length - 1 : prevIndex - 1
+        setCurrentImageIndex((prev) =>
+            prev === 0 ? dress.image?.length - 1 : prev - 1
         );
     };
 
-    if (isLoading) return <p>جاري التحميل...</p>;
-    if (error) return <p>حدث خطأ أثناء تحميل تفاصيل المنتج.</p>;
+    // دالة لتحويل التاريخ إلى ميلادي
+    const formatGregorianDate = (dateString) => {
+        if (!dateString) return 'غير محدد';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ar-EG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
+    if (isLoading) return <div className="text-center py-12">جاري التحميل...</div>;
+    if (error) return <div className="text-center py-12 text-red-500">حدث خطأ أثناء تحميل تفاصيل الفستان</div>;
 
     return (
-        <>
-            <section className='section__container bg-[#f8d7d0]'>
-                <h2 className='section__header capitalize'>صفحة المنتج الفردي</h2>
-                <div className='section__subheader space-x-2'>
-                    <span className='hover:text-primary'><Link to="/">الرئيسية</Link></span>
-                    <i className="ri-arrow-right-s-line"></i>
-                    <span className='hover:text-primary'><Link to="/shop">المتجر</Link></span>
-                    <i className="ri-arrow-right-s-line"></i>
-                    <span className='hover:text-primary'>{singleProduct.name}</span>
-                </div>
-            </section>
+        <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* مسار التنقل */}
+            <div className="flex items-center text-sm text-gray-600 mb-6">
+                <Link to="/" className="hover:text-primary">الرئيسية</Link>
+                <span className="mx-2">/</span>
+                <Link to="/shop" className="hover:text-primary">الفساتين</Link>
+                <span className="mx-2">/</span>
+                <span className="text-gray-400">{dress.name}</span>
+            </div>
 
-            <section className='section__container mt-8'>
-                <div className='flex flex-col items-center md:flex-row gap-8'>
-                    {/* صورة المنتج */}
-                    <div className='md:w-1/2 w-full relative'>
-                        {singleProduct.image && singleProduct.image.length > 0 ? (
-                            <>
-                                <img
-                                    src={singleProduct.image[currentImageIndex]}
-                                    alt={singleProduct.name}
-                                    className='rounded-md w-full h-auto'
-                                    onError={(e) => {
-                                        e.target.src = "https://via.placeholder.com/500"; // صورة بديلة في حالة الخطأ
-                                        e.target.alt = "Image not found";
-                                    }}
-                                />
-                                {/* أزرار التنقل بين الصور */}
-                                {singleProduct.image.length > 1 && (
-                                    <>
-                                        <button
-                                            onClick={prevImage}
-                                            className='absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full'
-                                        >
-                                            <i className="ri-arrow-left-s-line"></i>
-                                        </button>
-                                        <button
-                                            onClick={nextImage}
-                                            className='absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full'
-                                        >
-                                            <i className="ri-arrow-right-s-line"></i>
-                                        </button>
-                                    </>
-                                )}
-                            </>
-                        ) : (
-                            <p className="text-red-600">لا توجد صور متاحة لهذا المنتج.</p>
-                        )}
-                    </div>
-
-                    <div className='md:w-1/2 w-full'>
-                        <h3 className='text-2xl font-semibold mb-4'>{singleProduct.name}</h3>
-                        <p className='text-xl text-primary mb-4 space-x-1'>
-                            {singleProduct.price} ر.ع
-                            {singleProduct.oldPrice && (
-                                <s className='ml-1'>ر.ع {singleProduct.oldPrice}</s>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8" dir='rtl'>
+                {/* معرض الصور */}
+                <div className="bg-white p-4 rounded-lg shadow">
+                    {dress.image?.length > 0 ? (
+                        <div className="relative">
+                            <img
+                                src={dress.image[currentImageIndex]}
+                                alt={dress.name}
+                                className="w-full h-80 object-contain rounded"
+                            />
+                            {dress.image.length > 1 && (
+                                <div className="flex justify-between absolute top-1/2 w-full px-2">
+                                    <button
+                                        onClick={prevImage}
+                                        className="bg-white/80 text-gray-800 p-2 rounded-full shadow"
+                                    >
+                                        ←
+                                    </button>
+                                    <button
+                                        onClick={nextImage}
+                                        className="bg-white/80 text-gray-800 p-2 rounded-full shadow"
+                                    >
+                                        →
+                                    </button>
+                                </div>
                             )}
-                        </p>
-                        <p className='text-gray-400 mb-4'>{singleProduct.description}</p>
-
-                        {/* معلومات إضافية عن المنتج */}
-                        <div className='flex flex-col space-y-2'>
-                            <p><strong>الفئة:</strong> {singleProduct.category}</p>
-                            {/* <p><strong>اللون:</strong> {singleProduct.color}</p> */}
-                            <div className='flex gap-1 items-center'>
-                                {/* <strong>التقييم: </strong> */}
-                                {/* <RatingStars rating={singleProduct.rating} /> */}
+                            <div className="flex mt-4 space-x-2 overflow-x-auto">
+                                {dress.image.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt=""
+                                        className={`w-16 h-16 object-cover rounded cursor-pointer border ${currentImageIndex === index ? 'border-primary' : 'border-transparent'}`}
+                                        onClick={() => setCurrentImageIndex(index)}
+                                    />
+                                ))}
                             </div>
+                        </div>
+                    ) : (
+                        <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center">
+                            <p className="text-gray-500">لا توجد صور متاحة</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* تفاصيل الفستان */}
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h1 className="text-2xl font-bold mb-4">{dress.name}</h1>
+
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-xl font-bold text-primary mb-2">{dress.price} ر.س</p>
+                            {dress.remainingAmount > 0 && (
+                                <p className="text-gray-600">المبلغ المتبقي: {dress.remainingAmount} ر.س</p>
+                            )}
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <p className="font-medium">تاريخ الإضافة:</p>
+                                <p>{formatGregorianDate(dress.date)}</p>
+                            </div>
+                            <div>
+                                <p className="font-medium">تاريخ الاستلام:</p>
+                                <p>{formatGregorianDate(dress.deliveryDate)}</p>
+                            </div>
+                            <div>
+                                <p className="font-medium">تاريخ الإرجاع:</p>
+                                <p>{formatGregorianDate(dress.returnDate)}</p>
+                            </div>
+                            
+                        </div>
+
+                        <div>
+                            <p className="font-medium">مكان الاستلام:</p>
+                            <p>{dress.deliveryLocation || 'غير محدد'}</p>
+                        </div>
+
+                        <div>
+                            <p className="font-medium">الوصف:</p>
+                            <p className="text-gray-600">{dress.description || 'لا يوجد وصف'}</p>
                         </div>
 
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleAddToCart(singleProduct);
-                            }}
-                            className='mt-6 px-6 py-3 bg-primary text-white rounded-md'
+                            onClick={handleAddToCart}
+                            className="w-full bg-primary text-white py-2 rounded hover:bg-primary-dark transition"
                         >
                             إضافة إلى السلة
                         </button>
                     </div>
                 </div>
-            </section>
-
-            {/* عرض التقييمات */}
-            <section className='section__container mt-8'>
-                <ReviewsCard productReviews={productReviews} />
-            </section>
-        </>
+            </div>
+        </div>
     );
 };
 

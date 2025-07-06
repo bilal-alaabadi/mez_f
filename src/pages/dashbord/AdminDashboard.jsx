@@ -6,8 +6,8 @@ import { logout } from '../../redux/features/auth/authSlice';
 
 const navItems = [
     { path: '/dashboard/admin', label: 'لوحة التحكم' },
-    { path: '/dashboard/add-product', label: 'أضافة منتج'  },
-    { path: '/dashboard/manage-products', label: 'تعديل المنتج' },
+    { path: '/dashboard/add-product', label: 'أضافة فستان'  },
+    { path: '/dashboard/manage-products', label: 'تعديل الفستان' },
     // { path: '/dashboard/users', label: 'المستخدمون'  },
     // { path: '/dashboard/manage-orders', label: 'أداره الطلبات'  },
 ]
@@ -30,7 +30,7 @@ const AdminDashboard = () => {
     <div className='space-y-5 bg-white p-8 md:h-screen flex flex-col justify-between'>
             <div>
                 <div className='nav__logo'>
-                    <Link to="/"><span>.</span>متجر</Link>
+                    <Link to="/">انتقل للصفحة الرئيسيه</Link>
                     <p className='text-xs italic'>لوحة تحكم المشرف</p>
                 </div>
                 <hr className='mt-5' />

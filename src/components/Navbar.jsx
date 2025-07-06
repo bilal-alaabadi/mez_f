@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import CartModal from '../pages/shop/CartModal';
 import avatarImg from "../assets/avatar.png";
 import { useLogoutUserMutation } from '../redux/features/auth/authApi';
 import { logout } from '../redux/features/auth/authSlice';
-import log from "../assets/ChatGPT_Image_May_5__2025__09_35_03_AM-removebg-preview.png"
-const Navbar = () => {
-    const products = useSelector((state) => state.cart.products);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const handleCartToggle = () => setIsCartOpen(!isCartOpen);
+import log from "../assets/ChatGPT_Image_Jul_6__2025__08_50_03_PM-removebg-preview.png"
 
+const Navbar = () => {
     // User authentication
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -28,9 +24,8 @@ const Navbar = () => {
     // Admin dropdown menus
     const adminDropDownMenus = [
         { label: "لوحة التحكم", path: "/dashboard/admin" },
-        { label: "تعديل المنتج", path: "/dashboard/manage-products" },
-        // { label: "جميع الطلبات", path: "/dashboard/manage-orders" },
-        { label: "إضافة منتج", path: "/dashboard/add-product" },
+        { label: "تعديل الفستان", path: "/dashboard/manage-products" },
+        { label: "إضافة فستان", path: "/dashboard/add-product" },
     ];
 
     // User dropdown menus
@@ -54,7 +49,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className='fixed-nav-bar w-full bg-white  pb-10 pt-3'>
+        <header className='fixed-nav-bar w-full bg-white pb-16 pt-10'>
             <nav className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center relative'>
                 {/* Mobile Menu Button (Hamburger Icon) */}
                 <button
@@ -73,42 +68,25 @@ const Navbar = () => {
                     </li>
                     <li>
                         <Link to="/shop" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
-                            المتجر
+                            الفساتين
                         </Link>
                     </li>
-                    {/* <li>
-                        <Link to="" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
-                            الصفحات
-                        </Link>
-                    </li> */}
-
                 </ul>
 
                 {/* Logo (Centered) */}
-                <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center h-20 "> {/* زيادة الارتفاع */}
-                 {/* إضافة فئات الخط هنا */}
-                <Link to="/" className="inline-block ">
-                <img 
-                    src={log} 
-                    alt="شعار رؤية" 
-                    className="w-48 h-56 pt-6"  
-                    loading="lazy" 
-                />
-                <div></div>
-                </Link>
-            </div>
+                <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center h-20">
+                    <Link to="/" className="inline-block">
+                        <img 
+                            src={log} 
+                            alt="شعار رؤية" 
+                            className="w-48 h-56 pt-6"  
+                            loading="lazy" 
+                        />
+                    </Link>
+                </div>
 
                 {/* Nav Icons */}
                 <div className='flex items-center gap-4 sm:gap-6'>
-
-                    <button onClick={handleCartToggle} className='relative hover:text-primary'>
-                        <i className="ri-shopping-bag-line text-lg"></i>
-                        {products.length > 0 && (
-                            <sup className='absolute -top-2 -right-2 text-xs bg-primary text-white rounded-full px-1.5'>
-                                {products.length}
-                            </sup>
-                        )}
-                    </button>
                     {user ? (
                         <div className='relative'>
                             <img
@@ -161,18 +139,13 @@ const Navbar = () => {
                             </li>
                             <li>
                                 <Link to="/shop" className='block text-sm hover:text-primary transition-colors duration-300'>
-                                    المتجر
+                                    الفساتين
                                 </Link>
                             </li>
-
-
                         </ul>
                     </div>
                 )}
             </nav>
-
-            {/* Cart Modal */}
-            {isCartOpen && <CartModal products={products} isOpen={isCartOpen} onClose={handleCartToggle} />}
         </header>
     );
 };

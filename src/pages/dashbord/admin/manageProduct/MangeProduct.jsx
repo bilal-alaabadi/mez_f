@@ -51,7 +51,7 @@ const ManageProduct = () => {
                             <thead>
                                 <tr className="bg-gray-200">
                                     <th className="p-2">رقم</th>
-                                    <th className="p-2">اسم المنتج</th>
+                                    <th className="p-2">اسم الفستان</th>
                                     <th className="p-2">إدارة</th>
                                     <th className="p-2">إجراء</th>
                                 </tr>

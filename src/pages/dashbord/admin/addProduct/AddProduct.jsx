@@ -1,44 +1,24 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextInput from './TextInput';
-import SelectInput from './SelectInput';
 import UploadImage from './UploadImage';
 import { useAddProductMutation } from '../../../../redux/features/products/productsApi';
 import { useNavigate } from 'react-router-dom';
-
-const categories = [
-    { label: 'أختر عنصر', value: '' },
-    { label: 'بخور', value: 'بخور' },
-    { label: 'عطور', value: 'عطور' },
-    { label: 'مخمريات', value: 'مخمريات' },
-    { label: 'لوشنات', value: 'لوشنات' },
-    { label: 'معطرات', value: 'معطرات' },
-    { label: 'دهن عود', value: 'دهن_عود' },
-    { label: 'مسك', value: 'مسك' },
-    { label: 'زيوت عطرية', value: 'زيوت_عطرية' },
-    { label: 'كماليات', value: 'كماليات' }
-];
-
-// const colors = [
-//     { label: 'اختر اللون', value: '' },
-//     { label: 'أسود', value: 'أسود' },
-//     { label: 'أحمر', value: 'أحمر' },
-//     { label: 'ذهبي', value: 'ذهبي' },
-//     { label: 'أزرق', value: 'أزرق' },
-//     { label: 'أخضر', value: 'أخضر' }
-// ];
 
 const AddProduct = () => {
     const { user } = useSelector((state) => state.auth);
 
     const [product, setProduct] = useState({
         name: '',
-        category: '',
-        // color: '',
+        date: '',
+        deliveryDate: '',
+        returnDate: '',
+        deliveryLocation: '',
         price: '',
+        remainingAmount: '',
         description: ''
     });
-    const [image, setImage] = useState([]); // مصفوفة لحفظ روابط الصور
+    const [image, setImage] = useState([]);
 
     const [AddProduct, { isLoading, error }] = useAddProductMutation();
     const navigate = useNavigate();
@@ -53,19 +33,25 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!product.name || !product.category || !product.price || !product.description ||  image.length === 0) {
+        if (!product.name || !product.price || !product.description || 
+            !product.date || !product.deliveryDate || !product.returnDate || 
+            !product.deliveryLocation || !product.remainingAmount || 
+            image.length === 0) {
             alert('أملأ كل الحقول');
             return;
         }
 
         try {
             await AddProduct({ ...product, image, author: user?._id }).unwrap();
-            alert('تمت أضافة المنتج بنجاح');
+            alert('تمت أضافة الفستان بنجاح');
             setProduct({
                 name: '',
-                category: '',
-                // color: '',
+                date: '',
+                deliveryDate: '',
+                returnDate: '',
+                deliveryLocation: '',
                 price: '',
+                remainingAmount: '',
                 description: ''
             });
             setImage([]);
@@ -77,35 +63,57 @@ const AddProduct = () => {
 
     return (
         <div className="container mx-auto mt-8">
-            <h2 className="text-2xl font-bold mb-6">أضافة منتج جديد</h2>
+            <h2 className="text-2xl font-bold mb-6">أضافة فستان جديد</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <TextInput
-                    label="أسم المنتج"
+                    label="أسم الفستان"
                     name="name"
-                    placeholder="أكتب أسم المنتج"
+                    placeholder="أكتب أسم الفستان"
                     value={product.name}
                     onChange={handleChange}
                 />
-                <SelectInput
-                    label="صنف المنتج"
-                    name="category"
-                    value={product.category}
+                <TextInput
+                    label="التاريخ"
+                    name="date"
+                    type="date"
+                    value={product.date}
                     onChange={handleChange}
-                    options={categories}
                 />
-                {/* <SelectInput
-                    label="Color"
-                    name="color"
-                    value={product.color}
+                <TextInput
+                    label="تاريخ الاستلام"
+                    name="deliveryDate"
+                    type="date"
+                    value={product.deliveryDate}
                     onChange={handleChange}
-                    options={colors}
-                /> */}
+                />
+                <TextInput
+                    label="تاريخ الترجيع"
+                    name="returnDate"
+                    type="date"
+                    value={product.returnDate}
+                    onChange={handleChange}
+                />
+                <TextInput
+                    label="مكان الاستلام"
+                    name="deliveryLocation"
+                    placeholder="مكان استلام الفستان"
+                    value={product.deliveryLocation}
+                    onChange={handleChange}
+                />
                 <TextInput
                     label="السعر"
                     name="price"
                     type="number"
-                    placeholder="50"
+                    placeholder="السعر الكامل"
                     value={product.price}
+                    onChange={handleChange}
+                />
+                <TextInput
+                    label="الباقي"
+                    name="remainingAmount"
+                    type="number"
+                    placeholder="المبلغ المتبقي"
+                    value={product.remainingAmount}
                     onChange={handleChange}
                 />
                 <UploadImage
@@ -114,19 +122,19 @@ const AddProduct = () => {
                     setImage={setImage}
                 />
                 <div>
-                    <label htmlFor="description" className='block text-sm font-medium text-gray-700'>وصف المنتج</label>
+                    <label htmlFor="description" className='block text-sm font-medium text-gray-700'>وصف الفستان</label>
                     <textarea
                         name="description"
                         id="description"
                         className='add-product-InputCSS'
                         value={product.description}
-                        placeholder='Write a product description'
+                        placeholder='أكتب وصفًا للفستان'
                         onChange={handleChange}
                     ></textarea>
                 </div>
                 <div>
                     <button type='submit' className='add-product-btn' disabled={isLoading}>
-                        {isLoading ? "جاري الإضافة..." : "أضف منتج"}
+                        {isLoading ? "جاري الإضافة..." : "أضف فستان"}
                     </button>
                 </div>
             </form>

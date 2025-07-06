@@ -31,11 +31,9 @@ const TrendingProducts = () => {
     return (
         <section className="section__container product__container" >
             <h2 className="section__header text-3xl font-bold text-gray-800 mb-4">
-            احدث المنتجات
+             الفساتين
             </h2>
-            <p className="section__subheader text-lg text-gray-600 mb-12" dir='rtl'>
-            نُبدع بخوراً وعطوراً عُمانيه  تحمل لمسة فخامة وأناقة لكل روح راقية.
-            </p>
+
 
             {/* Product Cards */}
             <div className="mt-12" dir='rtl'>
@@ -61,12 +59,7 @@ const TrendingProducts = () => {
                             {/* Product Description */}
                             <div className="product__card__content text-center mt-4">
                                 <h4 className="text-lg font-semibold">{product.name}</h4>
-                                <p className="text-primary mt-2">
-                                    {product.price}.ر.ع
-                                    {product.oldPrice && (
-                                        <s className="text-gray-500 ml-2">ر.ع{product.oldPrice}ر.ع</s>
-                                    )}
-                                </p>
+                                
                                 {/* <RatingStars rating={product.rating} /> */}
                             </div>
                         </div>

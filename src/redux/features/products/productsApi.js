@@ -10,13 +10,8 @@ const productsApi = createApi({
   tagTypes: ["Products"],
   endpoints: (builder) => ({
     fetchAllProducts: builder.query({
-      query: ({
-        category,
-        page = 1,
-        limit = 10,
-      }) => {
+      query: ({ page = 1, limit = 10 }) => {
         const queryParams = new URLSearchParams({
-          category: category || "",
           page: page.toString(),
           limit: limit.toString(),
         }).toString();
@@ -35,7 +30,12 @@ const productsApi = createApi({
       query: (newProduct) => ({
         url: "/create-product",
         method: "POST",
-        body: newProduct,
+        body: {
+          ...newProduct,
+          date: new Date(newProduct.date).toISOString(),
+          deliveryDate: new Date(newProduct.deliveryDate).toISOString(),
+          returnDate: new Date(newProduct.returnDate).toISOString()
+        },
         credentials: "include",
       }),
       invalidatesTags: ["Products"],
@@ -44,19 +44,21 @@ const productsApi = createApi({
     fetchRelatedProducts: builder.query({
       query: (id) => `/related/${id}`,
     }),
+
     updateProduct: builder.mutation({
-  query: ({ id, body, headers }) => ({
-    url: `update-product/${id}`,
-    method: "PATCH",
-    body,
-    headers: {
-      ...headers,
-      // لا تضف 'Content-Type' هنا، سيتم تعيينه تلقائياً من قبل fetchBaseQuery
-    },
-    credentials: "include",
-  }),
-  invalidatesTags: ["Products"],
-}),
+      query: ({ id, body }) => ({
+        url: `update-product/${id}`,
+        method: "PATCH",
+        body: {
+          ...body,
+          date: body.date ? new Date(body.date).toISOString() : undefined,
+          deliveryDate: body.deliveryDate ? new Date(body.deliveryDate).toISOString() : undefined,
+          returnDate: body.returnDate ? new Date(body.returnDate).toISOString() : undefined
+        },
+        credentials: "include",
+      }),
+      invalidatesTags: ["Products"],
+    }),
 
     deleteProduct: builder.mutation({
       query: (id) => ({
@@ -69,6 +71,13 @@ const productsApi = createApi({
   }),
 });
 
-export const {useFetchAllProductsQuery, useFetchProductByIdQuery, useAddProductMutation, useUpdateProductMutation, useDeleteProductMutation, useFetchRelatedProductsQuery} = productsApi;
+export const {
+  useFetchAllProductsQuery,
+  useFetchProductByIdQuery,
+  useAddProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useFetchRelatedProductsQuery
+} = productsApi;
 
 export default productsApi;
