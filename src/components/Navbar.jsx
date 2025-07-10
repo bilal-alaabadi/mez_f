@@ -67,9 +67,9 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/shop" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
+                        {/* <Link to="/shop" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
                             الفساتين
-                        </Link>
+                        </Link> */}
                     </li>
                 </ul>
 
@@ -84,9 +84,13 @@ const Navbar = () => {
                         />
                     </Link>
                 </div>
-
                 {/* Nav Icons */}
                 <div className='flex items-center gap-4 sm:gap-6'>
+                <div className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
+                    <Link to="/search">
+                    البحث
+                    </Link>
+                </div>
                     {user ? (
                         <div className='relative'>
                             <img
@@ -137,11 +141,11 @@ const Navbar = () => {
                                     الرئيسية
                                 </Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <Link to="/shop" className='block text-sm hover:text-primary transition-colors duration-300'>
                                     الفساتين
                                 </Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 )}

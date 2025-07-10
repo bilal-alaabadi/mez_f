@@ -9,23 +9,32 @@ const productsApi = createApi({
   }),
   tagTypes: ["Products"],
   endpoints: (builder) => ({
+    // جلب جميع المنتجات مع pagination
     fetchAllProducts: builder.query({
-      query: ({ page = 1, limit = 10 }) => {
-        const queryParams = new URLSearchParams({
-          page: page.toString(),
-          limit: limit.toString(),
-        }).toString();
-
-        return `/?${queryParams}`;
+      query: ({ page = 1, limit = 10, category }) => {
+        const params = new URLSearchParams();
+        params.append('page', page);
+        params.append('limit', limit);
+        if (category) params.append('category', category);
+        
+        return `/?${params.toString()}`;
       },
       providesTags: ["Products"],
     }),
 
+    // جلب جميع المنتجات بدون pagination
+    getAllProducts: builder.query({
+      query: () => '/',
+      providesTags: ["Products"],
+    }),
+
+    // جلب منتج بواسطة ID
     fetchProductById: builder.query({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: "Products", id }],
     }),
 
+    // إضافة منتج جديد
     AddProduct: builder.mutation({
       query: (newProduct) => ({
         url: "/create-product",
@@ -41,10 +50,13 @@ const productsApi = createApi({
       invalidatesTags: ["Products"],
     }),
 
+    // جلب منتجات ذات صلة
     fetchRelatedProducts: builder.query({
       query: (id) => `/related/${id}`,
+      providesTags: (result, error, id) => [{ type: "Products", id }],
     }),
 
+    // تحديث المنتج
     updateProduct: builder.mutation({
       query: ({ id, body }) => ({
         url: `update-product/${id}`,
@@ -57,9 +69,10 @@ const productsApi = createApi({
         },
         credentials: "include",
       }),
-      invalidatesTags: ["Products"],
+      invalidatesTags: (result, error, id) => [{ type: "Products", id }],
     }),
 
+    // حذف المنتج
     deleteProduct: builder.mutation({
       query: (id) => ({
         url: `/${id}`,
@@ -68,16 +81,41 @@ const productsApi = createApi({
       }),
       invalidatesTags: (result, error, id) => [{ type: "Products", id }],
     }),
+
+    // البحث عن المنتجات
+    searchProducts: builder.query({
+      query: (searchTerm) => ({
+        url: '/search',
+        params: { q: searchTerm }
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({ type: "Products", id: _id })),
+              { type: "Products", id: "LIST" },
+            ]
+          : [{ type: "Products", id: "LIST" }],
+    }),
+
+    // جلب أحدث المنتجات
+    fetchLatestProducts: builder.query({
+      query: (limit = 8) => `/latest?limit=${limit}`,
+      providesTags: ["Products"],
+    }),
   }),
 });
 
+// تصدير جميع hooks
 export const {
   useFetchAllProductsQuery,
+  useGetAllProductsQuery,
   useFetchProductByIdQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
-  useFetchRelatedProductsQuery
+  useFetchRelatedProductsQuery,
+  useSearchProductsQuery,
+  useFetchLatestProductsQuery,
 } = productsApi;
 
 export default productsApi;
