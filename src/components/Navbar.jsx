@@ -67,9 +67,9 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        {/* <Link to="/shop" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
+                        <Link to="/shop" className='text-sm sm:text-base md:text-lg hover:text-primary transition-colors duration-300'>
                             الفساتين
-                        </Link> */}
+                        </Link>
                     </li>
                 </ul>
 
@@ -141,11 +141,11 @@ const Navbar = () => {
                                     الرئيسية
                                 </Link>
                             </li>
-                            {/* <li>
+                            <li>
                                 <Link to="/shop" className='block text-sm hover:text-primary transition-colors duration-300'>
                                     الفساتين
                                 </Link>
-                            </li> */}
+                            </li>
                         </ul>
                     </div>
                 )}

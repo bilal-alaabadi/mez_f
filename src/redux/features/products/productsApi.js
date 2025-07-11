@@ -22,12 +22,6 @@ const productsApi = createApi({
       providesTags: ["Products"],
     }),
 
-    // جلب جميع المنتجات بدون pagination
-    getAllProducts: builder.query({
-      query: () => '/',
-      providesTags: ["Products"],
-    }),
-
     // جلب منتج بواسطة ID
     fetchProductById: builder.query({
       query: (id) => `/${id}`,
@@ -39,37 +33,24 @@ const productsApi = createApi({
       query: (newProduct) => ({
         url: "/create-product",
         method: "POST",
-        body: {
-          ...newProduct,
-          date: new Date(newProduct.date).toISOString(),
-          deliveryDate: new Date(newProduct.deliveryDate).toISOString(),
-          returnDate: new Date(newProduct.returnDate).toISOString()
-        },
+        body: newProduct,
         credentials: "include",
       }),
       invalidatesTags: ["Products"],
     }),
 
-    // جلب منتجات ذات صلة
-    fetchRelatedProducts: builder.query({
-      query: (id) => `/related/${id}`,
-      providesTags: (result, error, id) => [{ type: "Products", id }],
-    }),
-
-    // تحديث المنتج
+    // تحديث المنتج (معدل)
     updateProduct: builder.mutation({
-      query: ({ id, body }) => ({
+      query: ({ id, formData }) => ({
         url: `update-product/${id}`,
-        method: "PATCH",
-        body: {
-          ...body,
-          date: body.date ? new Date(body.date).toISOString() : undefined,
-          deliveryDate: body.deliveryDate ? new Date(body.deliveryDate).toISOString() : undefined,
-          returnDate: body.returnDate ? new Date(body.returnDate).toISOString() : undefined
-        },
+        method: "PUT",
+        body: formData,
         credentials: "include",
+        headers: {
+          // لا تضف Content-Type هنا، سيتم تعيينه تلقائياً لـ FormData
+        },
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Products", id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "Products", id }],
     }),
 
     // حذف المنتج
@@ -96,26 +77,16 @@ const productsApi = createApi({
             ]
           : [{ type: "Products", id: "LIST" }],
     }),
-
-    // جلب أحدث المنتجات
-    fetchLatestProducts: builder.query({
-      query: (limit = 8) => `/latest?limit=${limit}`,
-      providesTags: ["Products"],
-    }),
   }),
 });
 
-// تصدير جميع hooks
 export const {
   useFetchAllProductsQuery,
-  useGetAllProductsQuery,
   useFetchProductByIdQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
-  useFetchRelatedProductsQuery,
   useSearchProductsQuery,
-  useFetchLatestProductsQuery,
 } = productsApi;
 
 export default productsApi;

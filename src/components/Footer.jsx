@@ -37,7 +37,7 @@ const Footer = () => {
               <a href="https://www.instagram.com/mez._dresss/" className="text-gray-600 hover:hover:text-[#d3ae27]  transition">
                 <FaInstagram className="text-xl" />
               </a>
-              <a href="https://api.whatsapp.com/send/?phone=96893999017&text&type=phone_number&app_absent=0" className="text-gray-600 hover:text-[#d3ae27]  transition">
+              <a href="https://api.whatsapp.com/send/?phone=96890615966&text&type=phone_number&app_absent=0" className="text-gray-600 hover:text-[#d3ae27]  transition">
                 <FaWhatsapp className="text-xl" />
               </a>
             </div>
@@ -49,7 +49,7 @@ const Footer = () => {
   <p className="leading-relaxed">
     تم التطوير بواسطة  
     <a
-      href="https://www.instagram.com/roya_sow/"
+      href="https://www.mobadeer.com/"
       className="hover:text-[#d3ae27]  font-semibold hover:underline mx-1"
     >
       شركة مبادر
